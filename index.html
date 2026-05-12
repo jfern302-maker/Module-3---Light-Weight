@@ -321,10 +321,20 @@
 
         function drawCurve(x, bend, offset) {
             beginShape();
-            for(let y = -100; y <= 100; y += 10) {
-                // Parabolic bend
-                let xBend = (1 - (y*y)/10000) * bend;
-                curveVertex(x + xBend + random(-offset/4, offset/4), y);
+            // Catenary curve formula: x = a * cosh(y/a)
+            // We scale it so it fixed at y = -100 and y = 100
+            let k = 80; // Controls the "weight" of the curve
+            let coshMax = Math.cosh(100 / k);
+            let denom = 1 - coshMax;
+
+            for(let y = -100; y <= 100; y += 5) {
+                // Normalize cosh so it's 0 at ends and 1 at center
+                let catenary = (Math.cosh(y / k) - coshMax) / denom;
+                let xBend = catenary * bend;
+                
+                // Add a tiny bit of "micro-jitter" for electricity feel
+                let jitter = offset > 0 ? random(-offset/4, offset/4) : 0;
+                curveVertex(x + xBend + jitter, y);
             }
             endShape();
         }

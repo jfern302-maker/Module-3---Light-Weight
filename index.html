@@ -8,340 +8,463 @@
     <style>
         :root {
             --nood-warm: #ffaa33;
-            --nood-glow: rgba(255, 170, 51, 0.4);
             --bg-dark: #0a0a0a;
-            --text-gray: #888;
+            --bg-accent: #111;
+            --text-main: #eee;
+            --text-dim: #777;
+            --border-color: #222;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
         }
 
+        /* --- Interactive Header --- */
         #canvas-container {
             width: 100%;
-            height: 60vh;
+            height: 70vh;
+            background: radial-gradient(circle at center, #151515 0%, #0a0a0a 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            cursor: ns-resize;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .hint {
             position: absolute;
-            bottom: 20px;
-            color: var(--text-gray);
-            font-size: 0.8rem;
+            bottom: 30px;
+            color: var(--text-dim);
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            pointer-events: none;
-        }
-
-        .content {
-            max-width: 800px;
-            padding: 40px 20px;
-            line-height: 1.6;
-        }
-
-        h1 {
-            font-weight: normal;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .state-description {
-            margin-bottom: 60px;
-        }
-
-        .state-label {
-            color: var(--nood-warm);
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .poetic-line {
-            font-style: italic;
-            color: #ccc;
-            margin-top: 20px;
-            display: block;
-        }
-
-        .technical-specs {
-            background: #111;
-            padding: 20px;
-            border-left: 3px solid #333;
-            font-size: 0.9rem;
-            color: var(--text-gray);
-            margin-top: 40px;
-            margin-bottom: 80px;
-        }
-
-        .recordings {
-            margin-top: 40px;
-        }
-
-        .recordings h2 {
-            font-size: 1rem;
             letter-spacing: 3px;
-            color: var(--text-gray);
-            text-transform: uppercase;
-            margin-bottom: 20px;
+            font-family: monospace;
+            animation: pulse 2s infinite ease-in-out;
         }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* --- Layout Containers --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        section {
+            margin-bottom: 120px;
+        }
+
+        h1, h2 {
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 40px;
+        }
+
+        h1 { font-size: 2.5rem; color: #fff; }
+        h2 { font-size: 1rem; color: var(--nood-warm); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: inline-block; }
+
+        /* --- Story & Meaning --- */
+        .story-text {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+        }
+
+        .story-text p {
+            margin-bottom: 2rem;
+        }
+
+        .manifesto-line {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin: 60px 0;
+            padding-left: 20px;
+            border-left: 1px solid var(--nood-warm);
+        }
+
+        /* --- States of Light --- */
+        .states-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .state-card {
+            background: var(--bg-accent);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .state-num {
+            display: block;
+            font-family: monospace;
+            color: var(--nood-warm);
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+
+        .state-title {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .state-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        /* --- Hardware --- */
+        .hardware-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            font-family: monospace;
+            background: var(--bg-accent);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .hw-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222;
+        }
+
+        .hw-label { color: var(--text-dim); }
+        .hw-value { color: var(--nood-warm); }
+
+        /* --- Field Recordings --- */
         .video-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        @media (max-width: 600px) {
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .video-container {
             background: #000;
-            border: 1px solid #222;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
         }
 
         video {
             width: 100%;
-            height: auto;
-            filter: grayscale(0.5) contrast(1.2);
-            transition: filter 0.5s ease;
-        }
-
-        video:hover {
-            filter: grayscale(0) contrast(1);
-        }
-
-        .video-label {
-            font-size: 0.7rem;
-            color: #444;
-            margin-top: 10px;
-            text-transform: uppercase;
+            display: block;
+            filter: grayscale(0.2) contrast(1.1);
         }
 
         footer {
-            margin-top: 100px;
-            padding-bottom: 50px;
-            color: #333;
+            text-align: center;
+            padding: 100px 0 50px;
+            color: var(--text-dim);
+            font-family: monospace;
             font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .hardware-list, .video-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+            .states-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <div id="canvas-container">
-        <div class="hint">Pull down to apply tension</div>
+        <div class="hint">Hang the pebbles to apply physical weight</div>
     </div>
 
-    <div class="content">
-        <h1>Light Weight</h1>
+    <div class="container">
+        
+        <header>
+            <h1>Light Weight</h1>
+        </header>
 
-        <div class="state-description">
-            <span class="state-label">01. Deadzone</span>
-            <p>Silence. The sensor reads no load. The object is dormant, waiting for physical acknowledgment. The electricity rests at -7,000 raw units.</p>
-            <span class="poetic-line">"Nothing happens until the structure feels the weight."</span>
-        </div>
+        <!-- Chapter I: The Burden -->
+        <section id="story">
+            <h2>The Burden</h2>
+            <div class="story-text">
+                <p>This object is a self-portrait of the human condition. It is a physical manifestation of our capacity to carry weight—both the literal and the psychological. In our nature, to be "on" is to be carrying something; the light we project is often the direct result of the pressure we endure.</p>
+                <div class="manifesto-line">
+                    "Visibility is the cost of carrying weight."
+                </div>
+                <p>The lamp functions as a tactile task manager. Each pebble added is a commitment, a responsibility, a piece of life held in place. We find balance in the glow of our endurance, but the system is finite. When the burden exceeds the threshold of the individual, the logic fails, and the light fractures into a spasm. Only when the weight is removed can the light truly go out—a signal that the cycle is complete, and we are permitted to rest until the next burden arrives.</p>
+            </div>
+        </section>
 
-        <div class="state-description">
-            <span class="state-label">02. The First Breath</span>
-            <p>As tension builds, the primary Nood filament begins to glow. An exponential moving average smooths the jitter of the load cell, creating a slow, organic pulse of amber light.</p>
-            <span class="poetic-line">"The ghost of the effort becomes visible."</span>
-        </div>
+        <!-- Chapter II: States of Capacity -->
+        <section id="states">
+            <h2>States of Capacity</h2>
+            <div class="states-grid">
+                <div class="state-card">
+                    <span class="state-num">01</span>
+                    <span class="state-title">Rest</span>
+                    <p class="state-desc">The absence of weight. In this state, the light is extinguished, signaling a period of recovery and silence. The structure is at peace.</p>
+                </div>
+                <div class="state-card">
+                    <span class="state-num">02</span>
+                    <span class="state-title">Endurance</span>
+                    <p class="state-desc">The weight is held. The light is steady and full—a testament to the balance between the burden carried and the capacity to hold it.</p>
+                </div>
+                <div class="state-card">
+                    <span class="state-num">03</span>
+                    <span class="state-title">Fracture</span>
+                    <p class="state-desc">The limit is exceeded. The light can no longer maintain a steady state; it spasms erratically as a signal of internal breakdown.</p>
+                </div>
+            </div>
+        </section>
 
-        <div class="state-description">
-            <span class="state-label">03. Structural Harmony</span>
-            <p>Reaching the threshold of 30,000 units, the second filament joins. Two paths of light now navigate the tension, balancing the load with brightness.</p>
-        </div>
-
-        <div class="state-description">
-            <span class="state-label">04. Spasm Mode</span>
-            <p>Beyond 47,000 units, the system buckles. The light can no longer hold a steady form. It flickers erratically—a visual scream of the hardware's limits.</p>
-            <span class="poetic-line">"Beautiful failure is the highest form of interaction."</span>
-        </div>
-
-        <div class="technical-specs">
-            // LOGIC DUMP<br>
-            MCU: ESP32-S3<br>
-            SENSOR: 4-WIRE STRAIN GAUGE + HX711<br>
-            DRIVERS: 3x TPS61169 BOOST DRIVERS<br>
-            LOGIC: EMA SMOOTHING (0.25) + PWM CAP (178)
-        </div>
-
-        <section class="recordings">
+        <!-- Chapter III: Field Recordings -->
+        <section id="recordings">
             <h2>Field Recordings</h2>
             <div class="video-grid">
                 <div class="video-container">
                     <video autoplay loop muted playsinline>
-                        <source src="light%20weight/Videos/IMG_2001.MOV" type="video/mp4">
-                        Your browser does not support the video tag.
+                        <source src="light weight/Videos/IMG_2001.MOV" type="video/mp4">
                     </video>
                 </div>
                 <div class="video-container">
                     <video autoplay loop muted playsinline>
-                        <source src="light%20weight/Videos/IMG_2001%202.MOV" type="video/mp4">
-                        Your browser does not support the video tag.
+                        <source src="light weight/Videos/IMG_2001 2.MOV" type="video/mp4">
                     </video>
                 </div>
             </div>
         </section>
 
+        <!-- Chapter IV: The Anatomy -->
+        <section id="hardware">
+            <h2>The Anatomy</h2>
+            <div class="hardware-list">
+                <div class="hw-item"><span class="hw-label">MCU</span><span class="hw-value">ESP32-S3</span></div>
+                <div class="hw-item"><span class="hw-label">Sensor</span><span class="hw-value">4-Wire Strain Gauge</span></div>
+                <div class="hw-item"><span class="hw-label">Amp</span><span class="hw-value">HX711 24-bit ADC</span></div>
+                <div class="hw-item"><span class="hw-label">Driver</span><span class="hw-value">3x TPS61169 Boost</span></div>
+                <div class="hw-item"><span class="hw-label">Filament</span><span class="hw-value">Flexible LED Noods</span></div>
+                <div class="hw-item"><span class="hw-label">Power</span><span class="hw-value">5V DC / 2A Rail</span></div>
+                <div class="hw-item"><span class="hw-label">Filter</span><span class="hw-value">EMA Smoothing (0.25)</span></div>
+                <div class="hw-item"><span class="hw-label">Limit</span><span class="hw-value">PWM Cap (178)</span></div>
+            </div>
+        </section>
+
         <footer>
-            Module 3 | jfern302-maker | 2026
+            Module 3 | jfern302-maker | Communicative Object | 2026<br>
+            <a href="https://github.com/jfern302-maker/Module-3---Light-Weight" style="color: #444; text-decoration: none; border-bottom: 1px solid #222;">Source Repository</a>
         </footer>
     </div>
 
     <script>
-        let rawReading = -7000;
-        let smoothedReading = -7000;
-        let b1Smooth = 0;
-        let b2Smooth = 0;
-        
         const VAL_0 = -7000;
         const VAL_1 = 30000;
         const VAL_2 = 47000;
         const MAX_BRIGHT = 178;
         
-        const sensorSmoothingFactor = 0.15;
-        const brightSmoothingFactor = 0.10;
+        let mainNood;
+        let pebbles = [];
+        let smoothedWeight = VAL_0;
+
+        class Particle {
+            constructor(x, y, isLocked = false) {
+                this.x = x; this.y = y;
+                this.oldX = x; this.oldY = y;
+                this.isLocked = isLocked;
+            }
+        }
+
+        class NoodPhysics {
+            constructor(yBase, segments) {
+                this.yBase = yBase;
+                this.particles = [];
+                this.spacing = 400 / segments;
+                this.brightness = 0;
+
+                for (let i = 0; i <= segments; i++) {
+                    let px = -200 + i * this.spacing;
+                    let py = yBase + 20;
+                    this.particles.push(new Particle(px, py, i === 0 || i === segments));
+                }
+            }
+
+            update() {
+                let gravity = 0.6;
+                let friction = 0.97;
+
+                this.particles.forEach(p => {
+                    if (!p.isLocked) {
+                        let vx = (p.x - p.oldX) * friction;
+                        let vy = (p.y - p.oldY) * friction;
+                        p.oldX = p.x; p.oldY = p.y;
+                        p.x += vx; p.y += vy + gravity;
+                        
+                        pebbles.forEach(pebble => {
+                            if (pebble.isHung && pebble.attachedParticle === p) {
+                                p.y += map(pebble.size, 20, 55, 1.0, 3.5); 
+                            }
+                        });
+                    }
+                });
+
+                for (let i = 0; i < 6; i++) {
+                    for (let j = 0; j < this.particles.length - 1; j++) {
+                        let p1 = this.particles[j];
+                        let p2 = this.particles[j+1];
+                        let dx = p2.x - p1.x; let dy = p2.y - p1.y;
+                        let dist = sqrt(dx * dx + dy * dy);
+                        let diff = (this.spacing - dist) / dist;
+                        let offsetX = dx * diff * 0.5; let offsetY = dy * diff * 0.5;
+                        if (!p1.isLocked) { p1.x -= offsetX; p1.y -= offsetY; }
+                        if (!p2.isLocked) { p2.x += offsetX; p2.y += offsetY; }
+                    }
+                }
+            }
+
+            draw() {
+                let alpha = map(this.brightness, 0, MAX_BRIGHT, 0, 255);
+                if (alpha > 0) alpha *= (0.85 + Math.sin(frameCount * 0.05) * 0.15);
+
+                push();
+                noFill();
+                if (alpha > 5) {
+                    for(let i = 2; i > 0; i--) {
+                        stroke(255, 170, 51, alpha / (i * 4));
+                        strokeWeight(i * 7);
+                        this.renderPath();
+                    }
+                    stroke(255, 170, 51, alpha);
+                    strokeWeight(2.5);
+                    this.renderPath();
+                } else {
+                    stroke(45); strokeWeight(1.5);
+                    this.renderPath();
+                }
+                pop();
+            }
+
+            renderPath() {
+                beginShape();
+                curveVertex(this.particles[0].x, this.particles[0].y);
+                this.particles.forEach(p => curveVertex(p.x, p.y));
+                curveVertex(this.particles[this.particles.length-1].x, this.particles[this.particles.length-1].y);
+                endShape();
+            }
+        }
+
+        class Pebble {
+            constructor(x, y, isStaticStart = false) {
+                this.x = x; this.y = y;
+                this.size = random(20, 55); 
+                this.isDragging = false; this.isHung = isStaticStart;
+                this.attachedParticle = null;
+                this.seed = random(100);
+                this.col = random(40, 110);
+
+                if (isStaticStart) {
+                    this.attachedParticle = mainNood.particles[floor(mainNood.particles.length / 2)];
+                }
+            }
+
+            update() {
+                if (this.isDragging) {
+                    this.x = mouseX - width/2; this.y = mouseY - height/2;
+                } else if (this.isHung && this.attachedParticle) {
+                    this.x = this.attachedParticle.x; this.y = this.attachedParticle.y;
+                }
+            }
+
+            draw() {
+                push();
+                translate(this.x, this.y);
+                fill(this.col); stroke(this.col + 20); strokeWeight(1.5);
+                beginShape();
+                for (let a = 0; a < TWO_PI; a += 0.5) {
+                    let r = this.size/2 + noise(cos(a) + this.seed, sin(a) + this.seed) * (this.size * 0.2);
+                    vertex(cos(a) * r, sin(a) * r);
+                }
+                endShape(CLOSE);
+                pop();
+            }
+
+            checkMouse() {
+                return dist(mouseX - width/2, mouseY - height/2, this.x, this.y) < this.size/2;
+            }
+        }
 
         function setup() {
-            let canvas = createCanvas(windowWidth, 400);
+            let canvas = createCanvas(windowWidth, 450);
             canvas.parent('canvas-container');
+            mainNood = new NoodPhysics(-40, 15);
+            pebbles.push(new Pebble(0, 0, true));
+            for(let i = 0; i < 5; i++) {
+                pebbles.push(new Pebble(random(-150, 150), 130 + random(20)));
+            }
         }
 
         function draw() {
             background(10);
-
-            // Interaction: Mouse Y position simulates tension
-            // Map mouse from top to bottom of canvas to VAL_0 to VAL_2 + 10000
-            let targetReading = map(mouseY, 0, height, VAL_0 - 5000, VAL_2 + 10000, true);
-            if (!mouseIsPressed) {
-                targetReading = VAL_0;
-            }
-
-            // Smoothing (Logic from main.cpp)
-            rawReading = targetReading;
-            smoothedReading = (rawReading * sensorSmoothingFactor) + (smoothedReading * (1.0 - sensorSmoothingFactor));
-            
-            let targetB1 = 0;
-            let targetB2 = 0;
-
-            if (smoothedReading <= VAL_0) {
-                targetB1 = 0;
-                targetB2 = 0;
-            } else if (smoothedReading <= VAL_1) {
-                targetB1 = map(smoothedReading, VAL_0, VAL_1, 0, MAX_BRIGHT);
-                targetB2 = 0;
-            } else if (smoothedReading <= VAL_2) {
-                targetB1 = MAX_BRIGHT;
-                targetB2 = map(smoothedReading, VAL_1, VAL_2, 0, MAX_BRIGHT);
-            } else {
-                // Spasm logic
-                if (frameCount % 4 < 2) {
-                    targetB1 = MAX_BRIGHT;
-                    targetB2 = 40;
-                } else {
-                    targetB1 = 40;
-                    targetB2 = MAX_BRIGHT;
-                }
-            }
-
-            // Brightness Smoothing
-            if (smoothedReading <= VAL_2) {
-                b1Smooth = (targetB1 * brightSmoothingFactor) + (b1Smooth * (1.0 - brightSmoothingFactor));
-                b2Smooth = (targetB2 * brightSmoothingFactor) + (b2Smooth * (1.0 - brightSmoothingFactor));
-            } else {
-                b1Smooth = targetB1;
-                b2Smooth = targetB2;
-            }
-
-            drawNoods(b1Smooth, b2Smooth, smoothedReading);
-        }
-
-        function drawNoods(b1, b2, tension) {
-            push();
             translate(width/2, height/2);
+            mainNood.update();
+
+            let hungPebbles = pebbles.filter(p => p.isHung);
+            let cumulativeSize = hungPebbles.reduce((acc, p) => acc + p.size, 0);
             
-            // Visual Tension: Bend the lines based on tension
-            let bend = map(tension, VAL_0, VAL_2, 0, 50, true);
-            
-            // Draw Nood 1
-            drawFilament(-60, b1, bend);
-            
-            // Draw Nood 2
-            drawFilament(60, b2, bend);
-            
-            pop();
+            // Map weight based on cumulative pebble size
+            let targetWeight = map(cumulativeSize, 25, 230, VAL_0, VAL_2 + 10000);
+            smoothedWeight = lerp(smoothedWeight, targetWeight, 0.1);
+
+            let tB1 = 0;
+            let isSpasm = smoothedWeight > VAL_2;
+            if (smoothedWeight <= VAL_0) tB1 = 0;
+            else if (smoothedWeight <= VAL_1) tB1 = map(smoothedWeight, VAL_0, VAL_1, 0, MAX_BRIGHT * 0.6);
+            else if (smoothedWeight <= VAL_2) tB1 = map(smoothedWeight, VAL_1, VAL_2, MAX_BRIGHT * 0.6, MAX_BRIGHT);
+            else tB1 = (frameCount % 4 < 2) ? MAX_BRIGHT : 40;
+
+            mainNood.brightness = (isSpasm) ? tB1 : (tB1 * 0.1 + mainNood.brightness * 0.9);
+            mainNood.draw();
+            pebbles.forEach(p => { p.update(); p.draw(); });
         }
 
-        function drawFilament(xOffset, brightness, bend) {
-            let alpha = map(brightness, 0, MAX_BRIGHT, 0, 255);
-            let glow = map(brightness, 0, MAX_BRIGHT, 0, 20);
-            
-            if (alpha > 5) {
-                noFill();
-                strokeWeight(4);
-                
-                // Glow effect
-                for(let i = 1; i < 5; i++) {
-                    stroke(255, 170, 51, alpha / (i * 2));
-                    drawCurve(xOffset, bend, i * 2);
+        function mousePressed() {
+            for(let i = pebbles.length - 1; i >= 0; i--) {
+                if (pebbles[i].checkMouse()) {
+                    pebbles[i].isDragging = true; pebbles[i].isHung = false;
+                    pebbles[i].attachedParticle = null; break; 
                 }
-                
-                // Main filament
-                stroke(255, 170, 51, alpha);
-                strokeWeight(2);
-                drawCurve(xOffset, bend, 0);
-            } else {
-                // Wire when off
-                stroke(30);
-                strokeWeight(1);
-                drawCurve(xOffset, 0, 0);
             }
         }
 
-        function drawCurve(x, bend, offset) {
-            beginShape();
-            // Catenary curve formula: x = a * cosh(y/a)
-            // We scale it so it fixed at y = -100 and y = 100
-            let k = 80; // Controls the "weight" of the curve
-            let coshMax = Math.cosh(100 / k);
-            let denom = 1 - coshMax;
-
-            for(let y = -100; y <= 100; y += 5) {
-                // Normalize cosh so it's 0 at ends and 1 at center
-                let catenary = (Math.cosh(y / k) - coshMax) / denom;
-                let xBend = catenary * bend;
-                
-                // Add a tiny bit of "micro-jitter" for electricity feel
-                let jitter = offset > 0 ? random(-offset/4, offset/4) : 0;
-                curveVertex(x + xBend + jitter, y);
-            }
-            endShape();
+        function mouseReleased() {
+            pebbles.forEach(p => {
+                if (p.isDragging) {
+                    p.isDragging = false;
+                    let minDist = 80; let nearest = null;
+                    mainNood.particles.forEach(part => {
+                        let d = dist(p.x, p.y, part.x, part.y);
+                        if (d < minDist) { minDist = d; nearest = part; }
+                    });
+                    if (nearest && !nearest.isLocked) { p.isHung = true; p.attachedParticle = nearest; }
+                }
+            });
         }
 
-        function windowResized() {
-            resizeCanvas(windowWidth, 400);
-        }
+        function windowResized() { resizeCanvas(windowWidth, 450); }
     </script>
 </body>
 </html>
